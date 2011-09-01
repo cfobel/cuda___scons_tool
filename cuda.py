@@ -55,14 +55,14 @@ def generate(env):
         env['NVCC'] = 'nvcc'
 
         # default flags for the NVCC compiler
-        env['NVCCFLAGS'] = ''
+        env['NVCCFLAGS'] = '-I$CUDA_SDK_PATH/C/common/inc'
         env['STATICNVCCFLAGS'] = ''
         env['SHAREDNVCCFLAGS'] = ''
         env['ENABLESHAREDNVCCFLAG'] = '-shared'
 
         # default NVCC commands
-        env['STATICNVCCCMD'] = '$NVCC -o $TARGET -c -I$CUDA_SDK_PATH/C/common/inc $NVCCFLAGS $STATICNVCCFLAGS $SOURCES'
-        env['SHAREDNVCCCMD'] = '$NVCC -o $TARGET -c -I$CUDA_SDK_PATH/C/common/inc $NVCCFLAGS $SHAREDNVCCFLAGS $ENABLESHAREDNVCCFLAG $SOURCES'
+        env['STATICNVCCCMD'] = '$NVCC -o $TARGET -c $NVCCFLAGS $STATICNVCCFLAGS $SOURCES'
+        env['SHAREDNVCCCMD'] = '$NVCC -o $TARGET -c $NVCCFLAGS $SHAREDNVCCFLAGS $ENABLESHAREDNVCCFLAG $SOURCES'
 
         # helpers
         home=os.environ.get('HOME', '')
