@@ -61,8 +61,8 @@ def generate(env):
         env['ENABLESHAREDNVCCFLAG'] = '-shared'
 
         # default NVCC commands
-        env['STATICNVCCCMD'] = '$NVCC -o $TARGET -c $NVCCFLAGS $STATICNVCCFLAGS $SOURCES'
-        env['SHAREDNVCCCMD'] = '$NVCC -o $TARGET -c $NVCCFLAGS $SHAREDNVCCFLAGS $ENABLESHAREDNVCCFLAG $SOURCES'
+        env['STATICNVCCCMD'] = '$NVCC -o $TARGET -c -I$CUDA_SDK_PATH/C/common/inc $NVCCFLAGS $STATICNVCCFLAGS $SOURCES'
+        env['SHAREDNVCCCMD'] = '$NVCC -o $TARGET -c -I$CUDA_SDK_PATH/C/common/inc $NVCCFLAGS $SHAREDNVCCFLAGS $ENABLESHAREDNVCCFLAG $SOURCES'
 
         # helpers
         home=os.environ.get('HOME', '')
@@ -116,6 +116,7 @@ def generate(env):
                 cudaSDKPath = env['CUDA_SDK_PATH']
         except:
                 paths=[ home + '/NVIDIA_GPU_Computing_SDK',
+                        home + '/local/opt/NVIDIA_GPU_Computing_SDK',
                         home + '/Apps/NVIDIA_GPU_Computing_SDK',
                         home + '/NVIDIA_CUDA_SDK', # i am just guessing here
                         home + '/Apps/NVIDIA_CUDA_SDK',
@@ -173,6 +174,7 @@ def generate(env):
         env.Append(LIBS=['cudart'])
         bld = Builder(action = '$NVCC -o $TARGET $NVCCFLAGS -ptx $SOURCE', suffix='.ptx')
         env.Append(BUILDERS = {'Ptx' : bld})
+
 
 def exists(env):
         return env.Detect('nvcc')
