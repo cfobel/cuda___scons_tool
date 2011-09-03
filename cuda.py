@@ -172,8 +172,17 @@ def generate(env):
                     cudaToolkitPath + '/lib']
         env.Append(LIBPATH=LIBPATH)
         env.Append(LIBS=['cudart'])
-        bld = Builder(action = '$NVCC -o $TARGET $NVCCFLAGS -ptx $SOURCE', suffix='.ptx')
-        env.Append(BUILDERS = {'Ptx' : bld})
+
+        DECUDA_PATH = 'site_scons/site_tools/cuda/decuda'
+
+        ptx_bld = Builder(action = '$NVCC -o $TARGET $NVCCFLAGS -ptx $SOURCE', suffix='.ptx')
+        env.Append(BUILDERS = {'Ptx' : ptx_bld})
+        elf_bld = Builder(action = '$NVCC -o $TARGET $NVCCFLAGS -cubin $SOURCE', suffix='.elf')
+        env.Append(BUILDERS = {'Elf' : elf_bld})
+        cubin_bld = Builder(action = DECUDA_PATH + '/elfToCubin.py $SOURCE > $TARGET', suffix='.cubin')
+        env.Append(BUILDERS = {'Cubin' : cubin_bld})
+        txt_bld = Builder(action = DECUDA_PATH + '/decuda.py -o $TARGET $SOURCE', suffix='.txt')
+        env.Append(BUILDERS = {'DeCubin' : txt_bld})
 
 
 def exists(env):
